@@ -24,21 +24,6 @@ std::ostream& operator<<(std::ostream& os, const Node& obj)
 	return os;
 }
 
-int testBadUsage()
-{
-#if 0
-	struct NoDefaultCtor {
-		NoDefaultCtor(int){}
-		void* ptr;
-	};
-	[[maybe_unused]] MemoryPool<NoDefaultCtor> mempool1{128, 1}; // compilation error
-
-	struct Empty {};
-	[[maybe_unused]] MemoryPool<Empty> mempool2{128, 1}; // compilation error
-#endif
-	return 0;
-}
-
 int testBasic()
 {
 	constexpr size_t numElementsToAllocate{1024};
@@ -92,10 +77,6 @@ int testBasic()
 int main(int /*argc*/, char* /*argv*/ [])
 {
 	if (auto res = testBasic() ; res != 0)
-	{
-		return res;
-	}
-	if (auto res = testBadUsage() ; res != 0)
 	{
 		return res;
 	}
