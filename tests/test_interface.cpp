@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
+#include <random>
+#include <algorithm>
+#include <numeric>
 
 #include "memoryPool.h"
 
@@ -46,6 +50,12 @@ int testBasic()
 	std::vector<Node*> allocatedPtrs; 
 	allocatedPtrs.reserve(numElementsToAllocate);
 
+	std::random_device rd;
+    std::mt19937 gen(rd());
+
+	std::array<size_t, numElementsToAllocate> freeOrder;
+	std::iota(freeOrder.begin(), freeOrder.end(), 0); 
+
 	size_t repeat{10};
 	while(repeat-- > 0)
 	{
@@ -67,9 +77,10 @@ int testBasic()
 			std::cout << "expected failed to allocate: " << e.what() << std::endl;
 		}
 
-		for (auto* ptr : allocatedPtrs)
+		std::shuffle(freeOrder.begin(), freeOrder.end(), gen);
+		for (auto i : freeOrder)
 		{
-			mempool.free(ptr);
+			mempool.free(allocatedPtrs[i]);
 		}
 		allocatedPtrs.clear();
 
